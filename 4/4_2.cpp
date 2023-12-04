@@ -65,7 +65,7 @@ int main() {
         } else {
             card_copies[card.number] = 1;
         }
-		int count = 0;
+	int count = 0;
         int current_copies = card_copies[card.number];
         // add as many copies as you currently have of the current card
 	for (int d : card.drawn) {
