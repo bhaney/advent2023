@@ -18,7 +18,7 @@ int findAndReplaceNumber(int i, int length, std::string& line) {
     int num_len = right_limit-left_limit+1;
     int num = std::stoi(line.substr(left_limit, num_len));
     std::cout << "part " << num << " is a valid number" << std::endl;
-    std::string replacement(num_len, '.');
+    std::string replacement(num_len, '.'); // replace the line with . to not double count
     line.replace(left_limit, num_len, replacement);
     return num;
 }
@@ -110,8 +110,8 @@ int main() {
     std::string next_line = "";
     while (std::getline(inputFile, line)) {
         // just store the previous and next line
-        // if we are line = 1, it means we are on the first line
-        // you look for symbols and see if there is any number surrounding them
+        // if we are at line_num = 1, it means we are on the first line
+        // you look for the symbol and see if there is any number surrounding them
         // then extract the number and store it in the sum
         prev_line = curr_line;
         curr_line = next_line;
@@ -121,7 +121,7 @@ int main() {
             continue;
         }
         std::cout << "processing line " << line_num << std::endl;
-        int parts = scanLines(prev_line, curr_line, next_line); // scanLines can change the line
+        int parts = scanLines(prev_line, curr_line, next_line);
         sum += parts;
         line_num += 1;
     }
@@ -130,7 +130,7 @@ int main() {
     curr_line = next_line;
     next_line = "";
     std::cout << "processing line " << line_num << std::endl;
-    int parts = scanLines(prev_line, curr_line, next_line); // scanLines can change the line
+    int parts = scanLines(prev_line, curr_line, next_line); 
     sum += parts;
     std::cout << "sum of game numbers is: " << sum << std::endl;
     inputFile.close();

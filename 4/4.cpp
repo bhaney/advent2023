@@ -11,7 +11,7 @@
 struct Card {
     int number;
     std::set<int> win;
-    std::vector<int> drawn;
+    std::vector<int> drawn; // in case you can draw the same number twice...
 };
 
 Card parseCard(std::string& line) {
