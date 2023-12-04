@@ -68,7 +68,7 @@ int main() {
 		int count = 0;
         int current_copies = card_copies[card.number];
         // add as many copies as you currently have of the current card
-		for (int d : card.drawn) {
+	for (int d : card.drawn) {
             if (card.win.find(d) != card.win.end()) { 
                 count += 1;
                 if (card_copies.count(card.number+count)) {
@@ -77,9 +77,9 @@ int main() {
                     card_copies[card.number+count] = current_copies;
                 }
             }
-		}
-		sum += card_copies[card.number];
-		std::cout << "card " << card.number << ", matches: " << count << ", total: " << card_copies[card.number] << std::endl;
+	}
+	sum += card_copies[card.number];
+	std::cout << "card " << card.number << ", matches: " << count << ", total: " << card_copies[card.number] << std::endl;
     }
     std::cout << "sum of game numbers is: " << sum << std::endl;
     inputFile.close();
