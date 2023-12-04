@@ -55,23 +55,34 @@ int main() {
 
     int sum = 0;
     std::string line;
+    std::map<int, int> card_copies; // map from card number to how many copies of that card there are
     while (std::getline(inputFile, line)) {
         Card card;
         card = parseCard(line);
+        // add the original card
+        if (card_copies.count(card.number)) {
+            card_copies[card.number] += 1;
+        } else {
+            card_copies[card.number] = 1;
+        }
 		int count = 0;
+        int current_copies = card_copies[card.number];
+        // add as many copies as you currently have of the current card
 		for (int d : card.drawn) {
             if (card.win.find(d) != card.win.end()) { 
                 count += 1;
+                if (card_copies.count(card.number+count)) {
+                    card_copies[card.number+count] += current_copies;
+                } else {
+                    card_copies[card.number+count] = current_copies;
+                }
             }
 		}
-		std::cout << "card " << card.number << ": num wins: " << card.win.size() << ", num drawn: " << card.drawn.size() << ", matches: " << count << std::endl;
-		if (count != 0) {
-			sum += std::pow(2, count-1);
-		}
+		sum += card_copies[card.number];
+		std::cout << "card " << card.number << ", matches: " << count << ", total: " << card_copies[card.number] << std::endl;
     }
     std::cout << "sum of game numbers is: " << sum << std::endl;
     inputFile.close();
     return 0;
 }
 
-	
