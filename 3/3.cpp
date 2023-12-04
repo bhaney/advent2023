@@ -18,7 +18,7 @@ int findAndReplaceNumber(int i, int length, std::string& line) {
     int num_len = right_limit-left_limit+1;
     int num = std::stoi(line.substr(left_limit, num_len));
     std::cout << "part " << num << " is a valid number" << std::endl;
-    std::string replacement(num_len, '.'); // replace the line with . to not double count
+    std::string replacement(num_len, '.'); // replace the part with . to not double count
     line.replace(left_limit, num_len, replacement);
     return num;
 }
