@@ -33,6 +33,8 @@ int main() {
          for (uint64_t j = top_value - 1; j > 0; j--) {
             if (j*(time-j) > threshold) {
                 count += 2;
+            } else {
+                break;
             }
          }
          product *= count;
