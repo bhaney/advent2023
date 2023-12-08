@@ -9,25 +9,26 @@
 #include <regex>
 #include <cctype>
 #include <functional>
+#include <numeric>
+#include <algorithm> 
 
 std::map<std::string, std::pair<std::string, std::string>> locMap; 
 
-bool allZNodes(std::vector<std::string>& places) {
-    for (const std::string& s : places) {
-        if (s[2] != 'Z') {
-            return false;
-        }
-    }
-    return true;
+struct Cycle { // all cycles start at a Z position
+    uint index;
+    uint64_t starting_z;
+    uint64_t period;
+};
+
+uint64_t lcm(uint64_t a, uint64_t b) {
+	return (a / std::gcd(a, b)) * b;
 }
 
-void changeNodes(std::vector<std::string>& nodes, std::map<std::string, std::pair<std::string, std::string>>& mapLoc, char dir) {
-    for (int i = 0; i < nodes.size(); i++) {
-        if (dir == 'L') {
-            nodes[i] = mapLoc.at(nodes[i]).first;
-        } else {
-            nodes[i] = mapLoc.at(nodes[i]).second;
-        }
+std::string editNode(std::string node, char dir) {
+    if (dir == 'L') {
+        return locMap.at(node).first;
+    } else {
+        return locMap.at(node).second;
     }
 }
 
@@ -64,20 +65,47 @@ int main() {
             nodes.push_back(key);
         }
     }
-    uint64_t count = 0;
-    int loc = 0;
     int locLen = instructions.length();
     int nodeSize = nodes.size();
-    while (!allZNodes(nodes)) {
-        count += 1;
-        char direction = instructions[loc];
-        changeNodes(nodes, locMap, direction);
-        loc += 1;
-        if (loc == locLen) {
-            loc = 0;
+    std::vector<Cycle> cycles;
+    for(int i = 0; i < nodeSize; i++) {
+        Cycle cycle; 
+        cycle.index = i;
+        std::cout << "node " << i << std::endl;
+        int count = 0;
+        int j = 0;
+        int loc = 0;
+        while (count < 2) {
+            if (nodes[i][2] == 'Z') {
+                std::cout << "  " << j << ": " << nodes[i] << "<-- Z location" << std::endl;
+                if (count == 1) {
+                    cycle.period = j - cycle.starting_z;
+                    count += 1;
+                }
+                if (count == 0) {
+                    cycle.starting_z = j;
+                    count += 1;
+                }
+            } 
+            char direction = instructions[loc];
+            nodes[i] = editNode(nodes[i], direction);
+            j += 1;
+            loc += 1;
+            if (loc == locLen) {
+                loc = 0;
+            }
         }
+		cycles.push_back(cycle);
     }
-    std::cout << "count is: " << count << std::endl;
+    // find the least common multiple
+    uint64_t lcm_result = 1;
+    for (Cycle c : cycles) {
+    	std::cout << "lcm of " << lcm_result << " and " << c.period << std::endl;
+        lcm_result = lcm(lcm_result, c.period);
+    	std::cout << "is " << lcm_result << std::endl;
+    }
+    std::cout << "lcm result " << lcm_result << std::endl;
+
     inputFile.close();
     return 0;
 }
