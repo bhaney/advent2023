@@ -12,14 +12,13 @@
 
 std::map<std::string, std::pair<std::string, std::string>> locMap; 
 
-int countNodes(std::vector<std::string>& places) {
-    int count = 0;
+bool allZNodes(std::vector<std::string>& places) {
     for (const std::string& s : places) {
-        if (s[2] == 'Z') {
-            count += 1;
+        if (s[2] != 'Z') {
+            return false;
         }
     }
-    return count;
+    return true;
 }
 
 void changeNodes(std::vector<std::string>& nodes, std::map<std::string, std::pair<std::string, std::string>>& mapLoc, char dir) {
@@ -69,14 +68,10 @@ int main() {
     int loc = 0;
     int locLen = instructions.length();
     int nodeSize = nodes.size();
-    while (countNodes(nodes) != nodeSize) {
+    while (!allZNodes(nodes)) {
         count += 1;
         char direction = instructions[loc];
-        if (direction == 'L') {
-            changeNodes(nodes, locMap, 'L');
-        } else {
-            changeNodes(nodes, locMap, 'R');
-        }
+        changeNodes(nodes, locMap, direction);
         loc += 1;
         if (loc == locLen) {
             loc = 0;
